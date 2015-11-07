@@ -2,12 +2,16 @@ package emailclient;
 
 import java.awt.EventQueue;
 
+import javax.mail.MessagingException;
 import javax.swing.*;
 
 import java.awt.Font;
+import java.io.IOException;
+import java.util.ArrayList;
+
 import javax.swing.JTable;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.text.StyledEditorKit.ForegroundAction;
 
 public class GUI {
 
@@ -29,11 +33,19 @@ public class GUI {
 			}
 		});
 	}
-
+	
+	
+	public Main main;
 	/**
 	 * Create the application.
+	 * @throws IOException 
+	 * @throws MessagingException 
 	 */
-	public GUI() {
+	public GUI() throws MessagingException, IOException {
+		
+		
+		main = new Main();
+		main.run();
 		initialize();
 	}
 
@@ -84,15 +96,65 @@ public class GUI {
 		btnArchive.setBounds(420, 43, 89, 23);
 		frame.getContentPane().add(btnArchive);
 		
-		//Main emailname = new Main();
-		JLabel lblEmails = new JLabel(Main.username + " emails");
+		JLabel lblEmails = new JLabel(main.username + " emails");
 		lblEmails.setFont(new Font("Consolas", Font.PLAIN, 11));
 		lblEmails.setHorizontalAlignment(SwingConstants.CENTER);
 		lblEmails.setBounds(10, 11, 516, 14);
 		frame.getContentPane().add(lblEmails);
 		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(25, 77, 484, 310);
+		frame.getContentPane().add(scrollPane);
+		
 		table = new JTable();
-		table.setBounds(25, 92, 484, 285);
-		frame.getContentPane().add(table);
+		if(main.messageCount == 0)
+		{
+			JLabel label = new JLabel("No emails :(");
+			label.setFont(new Font("Consolas", Font.PLAIN, 11));
+			label.setHorizontalAlignment(SwingConstants.CENTER);
+			label.setBounds(170, 200, 200, 100);
+			frame.getContentPane().add(label);
+		}
+		else
+		{
+			/**
+			 *  List<int[]> rowList = new ArrayList<int[]>();
+
+			    rowList.add(new int[] { 1, 2, 3 });
+			    rowList.add(new int[] { 4, 5, 6 });
+			    rowList.add(new int[] { 7, 8 });
+			
+			    for (int[] row : rowList) {
+			        System.out.println("Row = " + Arrays.toString(row));
+			    } // prints:
+			      // Row = [1, 2, 3]
+			      // Row = [4, 5, 6]
+			      // Row = [7, 8]
+			
+			    System.out.println(rowList.get(1)[1]); // prints "5"
+			 */
+			
+			ArrayList<Object[][]> rows = new ArrayList<Object[][]>();
+			
+			for (int i = 0; i < main.messageCount; i++) 
+			{
+				rows.add(new Object[][] {null,null,null,null});
+			}
+			//Object[][] rows = {null,null,null,null};
+			
+			
+			table.setModel(new DefaultTableModel(
+				new Object[][] 
+				{
+					{main.senders.get(0), main.subjects.get(0), main.dates.get(0), main.seen.get(0).toString()},
+				},
+				
+				new String[] {
+					"Sender", "Subject", "Date", "Read?"
+				}
+			));	
+		}
+		scrollPane.setViewportView(table);
+		
 	}
 }
