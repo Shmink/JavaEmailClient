@@ -21,7 +21,8 @@ public class Main
 	public int messageCount;
 	public static String username;
 	
-	public void run() throws MessagingException, IOException {
+	public void run() throws MessagingException, IOException 
+	{
 		// TODO Auto-generated method stub
 		IMAPFolder folder = null;
 		Store store = null;

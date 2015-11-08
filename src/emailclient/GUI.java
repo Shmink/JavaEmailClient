@@ -132,27 +132,23 @@ public class GUI {
 			      // Row = [7, 8]
 			
 			    System.out.println(rowList.get(1)[1]); // prints "5"
+			    
+			    {), main.subjects.get(0), main.dates.get(0), main.seen.get(0).toString()}
 			 */
+			String[] nameTheColoumns  = {"Sender", "Subject", "Date", "Read?"};
 			
-			ArrayList<Object[][]> rows = new ArrayList<Object[][]>();
-			
-			for (int i = 0; i < main.messageCount; i++) 
+			String[][] data = new String[main.messageCount][nameTheColoumns.length];
+			for(int i = 0; i < main.messageCount; i++)
 			{
-				rows.add(new Object[][] {null,null,null,null});
+			    String subject = main.subjects.get(i);
+			    String sender = main.senders.get(i);
+			    String date = main.dates.get(i);
+			    String read = main.seen.get(i).toString();
+			    String[] details = {sender, subject, date, read}; 
+			    
 			}
-			//Object[][] rows = {null,null,null,null};
 			
-			
-			table.setModel(new DefaultTableModel(
-				new Object[][] 
-				{
-					{main.senders.get(0), main.subjects.get(0), main.dates.get(0), main.seen.get(0).toString()},
-				},
-				
-				new String[] {
-					"Sender", "Subject", "Date", "Read?"
-				}
-			));	
+			table.setModel(new DefaultTableModel(data,nameTheColoumns));	
 		}
 		scrollPane.setViewportView(table);
 		
