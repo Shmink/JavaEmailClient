@@ -138,17 +138,26 @@ public class GUI {
 			String[] nameTheColoumns  = {"Sender", "Subject", "Date", "Read?"};
 			
 			String[][] data = new String[main.messageCount][nameTheColoumns.length];
+			
+			DefaultTableModel model = new DefaultTableModel(data, nameTheColoumns);
+			
+			table.setModel(new DefaultTableModel(data,nameTheColoumns));	
+			
 			for(int i = 0; i < main.messageCount; i++)
 			{
 			    String subject = main.subjects.get(i);
 			    String sender = main.senders.get(i);
 			    String date = main.dates.get(i);
 			    String read = main.seen.get(i).toString();
-			    String[] details = {sender, subject, date, read}; 
+			    String[] details = {sender, subject, date, read};
+			    
+			    System.out.println(sender + " " + subject + " " + date + " " + read);
+			    
+			    model.addRow(details);
 			    
 			}
 			
-			table.setModel(new DefaultTableModel(data,nameTheColoumns));	
+			table.setModel(new DefaultTableModel(data,nameTheColoumns));
 		}
 		scrollPane.setViewportView(table);
 		
