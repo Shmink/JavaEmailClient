@@ -1,14 +1,10 @@
 package emailclient;
 
 import java.awt.EventQueue;
-
 import javax.mail.MessagingException;
 import javax.swing.*;
-
 import java.awt.Font;
 import java.io.IOException;
-import java.util.ArrayList;
-
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.StyledEditorKit.ForegroundAction;
@@ -96,7 +92,7 @@ public class GUI {
 		btnArchive.setBounds(420, 43, 89, 23);
 		frame.getContentPane().add(btnArchive);
 		
-		JLabel lblEmails = new JLabel(main.username + " emails");
+		JLabel lblEmails = new JLabel(Main.username + " emails");
 		lblEmails.setFont(new Font("Consolas", Font.PLAIN, 11));
 		lblEmails.setHorizontalAlignment(SwingConstants.CENTER);
 		lblEmails.setBounds(10, 11, 516, 14);
@@ -117,44 +113,18 @@ public class GUI {
 		}
 		else
 		{
-			/**
-			 *  List<int[]> rowList = new ArrayList<int[]>();
-
-			    rowList.add(new int[] { 1, 2, 3 });
-			    rowList.add(new int[] { 4, 5, 6 });
-			    rowList.add(new int[] { 7, 8 });
-			
-			    for (int[] row : rowList) {
-			        System.out.println("Row = " + Arrays.toString(row));
-			    } // prints:
-			      // Row = [1, 2, 3]
-			      // Row = [4, 5, 6]
-			      // Row = [7, 8]
-			
-			    System.out.println(rowList.get(1)[1]); // prints "5"
-			    
-			    {), main.subjects.get(0), main.dates.get(0), main.seen.get(0).toString()}
-			 */
 			String[] nameTheColoumns  = {"Sender", "Subject", "Date", "Read?"};
 			
 			String[][] data = new String[main.messageCount][nameTheColoumns.length];
-			
-			DefaultTableModel model = new DefaultTableModel(data, nameTheColoumns);
-			
-			table.setModel(new DefaultTableModel(data,nameTheColoumns));	
-			
 			for(int i = 0; i < main.messageCount; i++)
 			{
 			    String subject = main.subjects.get(i);
 			    String sender = main.senders.get(i);
 			    String date = main.dates.get(i);
 			    String read = main.seen.get(i).toString();
-			    String[] details = {sender, subject, date, read};
+			    String[] details = {sender, subject, date, read}; 
 			    
-			    System.out.println(sender + " " + subject + " " + date + " " + read);
-			    
-			    model.addRow(details);
-			    
+			    data[i] = details;
 			}
 			
 			table.setModel(new DefaultTableModel(data,nameTheColoumns));
