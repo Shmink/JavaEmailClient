@@ -1,13 +1,19 @@
 package emailclient;
 
 import java.awt.EventQueue;
+
 import javax.mail.MessagingException;
 import javax.swing.*;
+
 import java.awt.Font;
 import java.io.IOException;
+import java.util.Collections;
+
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.StyledEditorKit.ForegroundAction;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class GUI {
 
@@ -48,6 +54,9 @@ public class GUI {
 	/**
 	 * Initialize the contents of the frame.
 	 */
+	/**
+	 * 
+	 */
 	private void initialize() {
 		frame = new JFrame("Email client");
 		frame.setBounds(100, 100, 552, 448);
@@ -77,10 +86,16 @@ public class GUI {
 		btnInbox.setBounds(25, 43, 89, 23);
 		frame.getContentPane().add(btnInbox);
 		
-		JButton btnSent = new JButton("Sent");
-		btnSent.setFont(new Font("Consolas", Font.PLAIN, 11));
-		btnSent.setBounds(160, 43, 89, 23);
-		frame.getContentPane().add(btnSent);
+		JButton btnComposse = new JButton("Compose");
+		btnComposse.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Compose comp = new Compose();
+				comp.main(null);
+			}
+		});
+		btnComposse.setFont(new Font("Consolas", Font.PLAIN, 11));
+		btnComposse.setBounds(160, 43, 89, 23);
+		frame.getContentPane().add(btnComposse);
 		
 		JButton btnJunk = new JButton("Junk");
 		btnJunk.setFont(new Font("Consolas", Font.PLAIN, 11));
@@ -106,6 +121,7 @@ public class GUI {
 		if(main.messageCount == 0)
 		{
 			JLabel label = new JLabel("No emails :(");
+			
 			label.setFont(new Font("Consolas", Font.PLAIN, 11));
 			label.setHorizontalAlignment(SwingConstants.CENTER);
 			label.setBounds(170, 200, 200, 100);
