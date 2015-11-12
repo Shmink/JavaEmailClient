@@ -1,24 +1,34 @@
 package emailclient;
 
 import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
 
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
+import javax.mail.BodyPart;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JTextField;
+import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-
-import java.awt.Font;
-
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 /**
  * GUI class for the compose a new email.
@@ -65,8 +75,11 @@ public class Compose {
 	 * Initialize the contents of the frame.
 	 */
 	public static String to,subject,cc,body,filepath,filename;
+	public static File actualFile;
 	JLabel lblattachmentNames = new JLabel("");
 	String path,name;
+	File newFile;
+	
 	
 	//Set up the GUI
 	private void initialize() 
@@ -141,6 +154,8 @@ public class Compose {
 		{
 			public void actionPerformed(ActionEvent e) 
 			{
+				System.out.println(bodyTxt.getText());
+				System.out.println(body);
 				promptForFile();
 			}
 		});
@@ -154,13 +169,14 @@ public class Compose {
 		{
 			public void actionPerformed(ActionEvent arg0) 
 			{
+				body = bodyTxt.getText();
 				to = toTxt.getText();
 				System.out.println("- " + to);
 				subject = subjectTxt.getText();
-				body = bodyTxt.getText();
 				cc = ccText.getText();
 				filepath = path;
 				filename = name;
+				actualFile = newFile;
 				SendMailSMTP.run();
 			}
 		});
@@ -193,12 +209,15 @@ public class Compose {
 	 * and file path in variables to be used later.
 	 * @return String - File name
 	 */
+	
 	public String promptForFile()
 	{
 		JFileChooser fileChooser = new JFileChooser();
 		int returnVal = fileChooser.showOpenDialog(null);
 		if (returnVal == JFileChooser.APPROVE_OPTION) 
 		{
+			newFile = fileChooser.getSelectedFile();
+			System.out.print(newFile + "\n");
 			path = fileChooser.getSelectedFile().getAbsolutePath();
 			name = fileChooser.getSelectedFile().getName();
 			lblattachmentNames.setText(name);

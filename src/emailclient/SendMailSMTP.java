@@ -77,18 +77,28 @@ public class SendMailSMTP
 			
 			if(Compose.filename != null)
 			{
-				MimeBodyPart messageBodyPart = new MimeBodyPart();
-		        Multipart multipart = new MimeMultipart();
-		        messageBodyPart = new MimeBodyPart();
-		        String file = Compose.filepath;
+				String file = Compose.filepath;
+				System.out.println(file);
 		        String fileName = Compose.filename;
-		        System.out.println(file);
 		        System.out.println(fileName);
-		        DataSource source = new FileDataSource(file);
-		        messageBodyPart.setDataHandler(new DataHandler(source));
-		        messageBodyPart.setFileName(fileName);
-		        multipart.addBodyPart(messageBodyPart);
-		        message.setContent(multipart);
+				
+			    Multipart multipart = new MimeMultipart();
+			 	BodyPart messageBodyPart = new MimeBodyPart();
+			 	DataSource source = new FileDataSource(file);
+			    messageBodyPart.setDataHandler(new DataHandler(source));
+			 	messageBodyPart.setFileName(fileName);
+			 	multipart.addBodyPart(messageBodyPart);
+			 	
+			 	BodyPart messageBodyPart2 = new MimeBodyPart();
+			 	messageBodyPart2.setText(Compose.body);
+			 	multipart.addBodyPart(messageBodyPart2);
+			 	
+			 	message.setContent(multipart);
+			}
+			else
+			{
+				message.setText(Compose.body);
+				message.saveChanges();
 			}
 			
 			//Send the message by javax.mail.Transport .			

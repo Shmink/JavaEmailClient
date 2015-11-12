@@ -24,13 +24,13 @@ public class Main
 	public int messageCount;
 	//Used to display email in label in UI, more for aesthics than functionality.
 	public static String username = "mrfakeemail22@gmail.com";
+	public static String password = "";
+	public static Session session;
 	
 	public void run() throws MessagingException, IOException 
 	{
 		IMAPFolder folder = null;
 		Store store = null;
-
-		String password = "";
 
 		//Set user properties
 		Properties props = System.getProperties();
@@ -51,7 +51,7 @@ public class Main
 		props.setProperty("mail.password", password);
 
 		//Establish a mail session
-		Session session = Session.getDefaultInstance(props);
+		session = Session.getDefaultInstance(props);
 
 		try
 		{
