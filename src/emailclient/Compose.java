@@ -15,9 +15,16 @@ import java.awt.Font;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+/**
+ * GUI class for the compose a new email.
+ * @author Tom Nicklin
+ *
+ */
 public class Compose {
 
 	private JFrame frmCompose;
@@ -26,15 +33,21 @@ public class Compose {
 	private JTextField ccText;
 
 	/**
-	 * Launch the application.
+	 * Gotta love that Java boiler plate code.
 	 */
-	public static void run() {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
+	public static void run() 
+	{
+		EventQueue.invokeLater(new Runnable() 
+		{
+			public void run() 
+			{
+				try 
+				{
 					Compose window = new Compose();
 					window.frmCompose.setVisible(true);
-				} catch (Exception e) {
+				} 
+				catch (Exception e) 
+				{
 					e.printStackTrace();
 				}
 			}
@@ -51,33 +64,35 @@ public class Compose {
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	public static String to,subject,cc,body;
+	public static String to,subject,cc,body,filepath,filename;
+	JLabel lblattachmentNames = new JLabel("");
+	String path,name;
 	
-	private void initialize() {
+	//Set up the GUI
+	private void initialize() 
+	{
 		frmCompose = new JFrame();
 		frmCompose.setTitle("Compose");
 		frmCompose.setBounds(100, 100, 552, 448);
 		frmCompose.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frmCompose.getContentPane().setLayout(null);
 		
+		//Again we want a UI that's not ugly as sin.
 		try {
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (UnsupportedLookAndFeelException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		SwingUtilities.updateComponentTreeUI(frmCompose);
 		
+		//Labels to show the relevant text field to fill in.
 		JLabel lblTo = new JLabel("To:");
 		lblTo.setFont(new Font("Consolas", Font.PLAIN, 11));
 		lblTo.setBounds(10, 11, 46, 14);
@@ -100,32 +115,52 @@ public class Compose {
 		frmCompose.getContentPane().add(subjectTxt);
 		subjectTxt.setColumns(10);
 		
+		//Seperator just to break it up a little.
 		JSeparator separator = new JSeparator();
 		separator.setBounds(10, 91, 516, 2);
 		frmCompose.getContentPane().add(separator);
 		
+		/*
+		 * Scroll pane to the text area so if your email is bordering on
+		 * being an essay you needn't worry, you can scroll to your hearts content.
+		 */
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(10, 104, 516, 255);
 		frmCompose.getContentPane().add(scrollPane);
 		
+		//Write the body of the email in this text area.
 		JTextArea bodyTxt = new JTextArea();
 		bodyTxt.setFont(new Font("Consolas", Font.PLAIN, 13));
 		scrollPane.setViewportView(bodyTxt);
 		bodyTxt.setWrapStyleWord(true);
 		bodyTxt.setLineWrap(true);
 		
+		//Add attachment button calls a method lower down.
 		JButton btnAddAttachement = new JButton("Add attachement");
+		btnAddAttachement.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				promptForFile();
+			}
+		});
 		btnAddAttachement.setFont(new Font("Consolas", Font.PLAIN, 11));
 		btnAddAttachement.setBounds(10, 375, 123, 23);
 		frmCompose.getContentPane().add(btnAddAttachement);
 		
+		//Send button gathers all the info from text field and then calls the send mail class
 		JButton btnSend = new JButton("Send");
-		btnSend.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
+		btnSend.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent arg0) 
+			{
 				to = toTxt.getText();
+				System.out.println("- " + to);
 				subject = subjectTxt.getText();
 				body = bodyTxt.getText();
 				cc = ccText.getText();
+				filepath = path;
+				filename = name;
 				SendMailSMTP.run();
 			}
 		});
@@ -133,9 +168,9 @@ public class Compose {
 		btnSend.setBounds(437, 374, 89, 23);
 		frmCompose.getContentPane().add(btnSend);
 		
-		JLabel lblattachmentNames = new JLabel("[attachment names]");
+		
 		lblattachmentNames.setFont(new Font("Consolas", Font.PLAIN, 11));
-		lblattachmentNames.setBounds(143, 378, 111, 14);
+		lblattachmentNames.setBounds(143, 378, 248, 14);
 		frmCompose.getContentPane().add(lblattachmentNames);
 		
 		ccText = new JTextField();
@@ -150,5 +185,28 @@ public class Compose {
 		frmCompose.getContentPane().add(lblCc);
 		
 		
+	}
+	
+	/**
+	 * promptForFile is called when you click the 'Add attachment' button.
+	 * It opens up a standard JFileChooser and will then save the file name
+	 * and file path in variables to be used later.
+	 * @return String - File name
+	 */
+	public String promptForFile()
+	{
+		JFileChooser fileChooser = new JFileChooser();
+		int returnVal = fileChooser.showOpenDialog(null);
+		if (returnVal == JFileChooser.APPROVE_OPTION) 
+		{
+			path = fileChooser.getSelectedFile().getAbsolutePath();
+			name = fileChooser.getSelectedFile().getName();
+			lblattachmentNames.setText(name);
+		  	return fileChooser.getSelectedFile().getName();
+		}
+		else
+		{
+			return "";
+		}
 	}
 }

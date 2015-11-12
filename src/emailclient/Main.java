@@ -13,25 +13,26 @@ import javax.mail.Multipart;
 
 import com.sun.mail.imap.IMAPFolder;
 
+/**
+ * 
+ * @author Tom Nicklin
+ * Class for retrieving the emails from a certain email account.
+ */
 public class Main 
-{
-	
-	public Main() {}
-	
+{	
+	//Used for accessing how many emails there are in the inbox.
 	public int messageCount;
+	//Used to display email in label in UI, more for aesthics than functionality.
 	public static String username = "mrfakeemail22@gmail.com";
 	
 	public void run() throws MessagingException, IOException 
 	{
-		// TODO Auto-generated method stub
 		IMAPFolder folder = null;
 		Store store = null;
 
-
-		//username = "mrfakeemail22@gmail.com";
 		String password = "";
 
-		// Step 1.1:  set mail user properties using Properties object
+		//Set user properties
 		Properties props = System.getProperties();
 		props.setProperty("mail.store.protocol", "imaps");
 
@@ -45,28 +46,28 @@ public class Main
 		else
 			password = new String(pwd.getPassword());
 
-		// Set Property with username and password for authentication
+		//Set Property with username and password for authentication
 		props.setProperty("mail.user", username);
 		props.setProperty("mail.password", password);
 
-		//Step 1.2: Establish a mail session (java.mail.Session)
+		//Establish a mail session
 		Session session = Session.getDefaultInstance(props);
 
 		try
 		{
-			// Step 2: Get the Store object from the mail session
+			// Get the Store object from the mail session
 			// A store needs to connect to the IMAP server
 			store = session.getStore("imaps");
 			store.connect("imap.googlemail.com",username, password);
 
-			// Step 3: Choose a folder, in this case, we chose inbox
+			// Choose a folder, in this case, we chose inbox
 			folder = (IMAPFolder) store.getFolder("inbox");
 
-			// Step 4: Open the folder
+			// Open the folder
 			if(!folder.isOpen())
 				folder.open(Folder.READ_WRITE);
 
-			// Step 5: Get messages from the folder
+			// Get messages from the folder
 			// Get total number of message
 			messageCount = folder.getMessageCount();
 			System.out.println("No of Messages : " + folder.getMessageCount());
@@ -96,7 +97,7 @@ public class Main
 					System.out.println("-----------" + multipart.getCount() + "----------------");
 					for (int x = 0; x < multipart.getCount(); x++) {
 						BodyPart bodyPart = multipart.getBodyPart(x);
-						// If the part is a plan text message, then print it out.
+						// If the part is a plain text message, then print it out.
 						if(bodyPart.getContentType().contains("TEXT/PLAIN"))
 						{
 							System.out.println(bodyPart.getContentType());
@@ -115,10 +116,8 @@ public class Main
 
 
 		} catch (NoSuchProviderException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (MessagingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		finally
@@ -129,7 +128,11 @@ public class Main
 
 	}
 	
-	
+	/*
+	 * When fetching emails a few import bits of information that we'll
+	 * need later on get passed to these methods that fill the array lists
+	 * with the necessary information needed.
+	 */
 	public ArrayList<String> subjects = new ArrayList<String>(messageCount);
 	public void setSubject(String subject)
 	{
