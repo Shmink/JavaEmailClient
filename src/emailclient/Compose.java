@@ -1,14 +1,11 @@
 package emailclient;
 
-import java.awt.Dimension;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
-import javax.swing.JTextPane;
 import javax.swing.JSeparator;
-import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -18,22 +15,25 @@ import java.awt.Font;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class Compose {
 
-	private JFrame frame;
-	private JTextField textField;
-	private JTextField textField_1;
+	private JFrame frmCompose;
+	private JTextField toTxt;
+	private JTextField subjectTxt;
+	private JTextField ccText;
 
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
+	public static void run() {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					Compose window = new Compose();
-					window.frame.setVisible(true);
+					window.frmCompose.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -51,11 +51,14 @@ public class Compose {
 	/**
 	 * Initialize the contents of the frame.
 	 */
+	public static String to,subject,cc,body;
+	
 	private void initialize() {
-		frame = new JFrame();
-		frame.setBounds(100, 100, 552, 448);
-		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		frame.getContentPane().setLayout(null);
+		frmCompose = new JFrame();
+		frmCompose.setTitle("Compose");
+		frmCompose.setBounds(100, 100, 552, 448);
+		frmCompose.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		frmCompose.getContentPane().setLayout(null);
 		
 		try {
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
@@ -73,58 +76,78 @@ public class Compose {
 			e.printStackTrace();
 		}
 		
-		SwingUtilities.updateComponentTreeUI(frame);
+		SwingUtilities.updateComponentTreeUI(frmCompose);
 		
 		JLabel lblTo = new JLabel("To:");
 		lblTo.setFont(new Font("Consolas", Font.PLAIN, 11));
 		lblTo.setBounds(10, 11, 46, 14);
-		frame.getContentPane().add(lblTo);
+		frmCompose.getContentPane().add(lblTo);
 		
 		JLabel lblSubject = new JLabel("Subject:");
 		lblSubject.setFont(new Font("Consolas", Font.PLAIN, 11));
 		lblSubject.setBounds(10, 36, 56, 14);
-		frame.getContentPane().add(lblSubject);
+		frmCompose.getContentPane().add(lblSubject);
 		
-		textField = new JTextField();
-		textField.setFont(new Font("Consolas", Font.PLAIN, 11));
-		textField.setBounds(76, 8, 450, 20);
-		frame.getContentPane().add(textField);
-		textField.setColumns(10);
+		toTxt = new JTextField();
+		toTxt.setFont(new Font("Consolas", Font.PLAIN, 11));
+		toTxt.setBounds(76, 8, 450, 20);
+		frmCompose.getContentPane().add(toTxt);
+		toTxt.setColumns(10);
 		
-		textField_1 = new JTextField();
-		textField_1.setFont(new Font("Consolas", Font.PLAIN, 11));
-		textField_1.setBounds(76, 33, 450, 20);
-		frame.getContentPane().add(textField_1);
-		textField_1.setColumns(10);
+		subjectTxt = new JTextField();
+		subjectTxt.setFont(new Font("Consolas", Font.PLAIN, 11));
+		subjectTxt.setBounds(76, 33, 450, 20);
+		frmCompose.getContentPane().add(subjectTxt);
+		subjectTxt.setColumns(10);
 		
 		JSeparator separator = new JSeparator();
-		separator.setBounds(10, 61, 516, 2);
-		frame.getContentPane().add(separator);
+		separator.setBounds(10, 91, 516, 2);
+		frmCompose.getContentPane().add(separator);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 74, 516, 285);
-		frame.getContentPane().add(scrollPane);
+		scrollPane.setBounds(10, 104, 516, 255);
+		frmCompose.getContentPane().add(scrollPane);
 		
-		JTextArea textArea = new JTextArea();
-		textArea.setFont(new Font("Consolas", Font.PLAIN, 13));
-		scrollPane.setViewportView(textArea);
-		textArea.setWrapStyleWord(true);
-		textArea.setLineWrap(true);
+		JTextArea bodyTxt = new JTextArea();
+		bodyTxt.setFont(new Font("Consolas", Font.PLAIN, 13));
+		scrollPane.setViewportView(bodyTxt);
+		bodyTxt.setWrapStyleWord(true);
+		bodyTxt.setLineWrap(true);
 		
 		JButton btnAddAttachement = new JButton("Add attachement");
 		btnAddAttachement.setFont(new Font("Consolas", Font.PLAIN, 11));
 		btnAddAttachement.setBounds(10, 375, 123, 23);
-		frame.getContentPane().add(btnAddAttachement);
+		frmCompose.getContentPane().add(btnAddAttachement);
 		
 		JButton btnSend = new JButton("Send");
+		btnSend.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				to = toTxt.getText();
+				subject = subjectTxt.getText();
+				body = bodyTxt.getText();
+				cc = ccText.getText();
+				SendMailSMTP.run();
+			}
+		});
 		btnSend.setFont(new Font("Consolas", Font.PLAIN, 11));
 		btnSend.setBounds(437, 374, 89, 23);
-		frame.getContentPane().add(btnSend);
+		frmCompose.getContentPane().add(btnSend);
 		
 		JLabel lblattachmentNames = new JLabel("[attachment names]");
 		lblattachmentNames.setFont(new Font("Consolas", Font.PLAIN, 11));
 		lblattachmentNames.setBounds(143, 378, 111, 14);
-		frame.getContentPane().add(lblattachmentNames);
+		frmCompose.getContentPane().add(lblattachmentNames);
+		
+		ccText = new JTextField();
+		ccText.setFont(new Font("Consolas", Font.PLAIN, 11));
+		ccText.setBounds(76, 60, 450, 20);
+		frmCompose.getContentPane().add(ccText);
+		ccText.setColumns(10);
+		
+		JLabel lblCc = new JLabel("CC:");
+		lblCc.setFont(new Font("Consolas", Font.PLAIN, 11));
+		lblCc.setBounds(10, 66, 46, 14);
+		frmCompose.getContentPane().add(lblCc);
 		
 		
 	}

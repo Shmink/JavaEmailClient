@@ -19,7 +19,7 @@ public class Main
 	public Main() {}
 	
 	public int messageCount;
-	public static String username;
+	public static String username = "mrfakeemail22@gmail.com";
 	
 	public void run() throws MessagingException, IOException 
 	{
@@ -28,7 +28,7 @@ public class Main
 		Store store = null;
 
 
-		username = "mrfakeemail22@gmail.com";
+		//username = "mrfakeemail22@gmail.com";
 		String password = "";
 
 		// Step 1.1:  set mail user properties using Properties object

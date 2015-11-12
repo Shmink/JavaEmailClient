@@ -7,11 +7,9 @@ import javax.swing.*;
 
 import java.awt.Font;
 import java.io.IOException;
-import java.util.Collections;
 
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.text.StyledEditorKit.ForegroundAction;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -89,8 +87,7 @@ public class GUI {
 		JButton btnComposse = new JButton("Compose");
 		btnComposse.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Compose comp = new Compose();
-				comp.main(null);
+				Compose.run();
 			}
 		});
 		btnComposse.setFont(new Font("Consolas", Font.PLAIN, 11));
